@@ -7,7 +7,6 @@
 
 using namespace std;
 
-// Клас для представлення жителя
 class Resident {
     string name;
     int age;
@@ -23,7 +22,6 @@ public:
     }
 };
 
-// Абстрактний клас для приміщень
 class Room {
 protected:
     int roomCount;
@@ -52,7 +50,6 @@ public:
     }
 };
 
-// Клас для квартири
 class Apartment : public Room {
     int entrance;
     int floor;
@@ -68,7 +65,6 @@ public:
     }
 };
 
-// Клас для приватного будинку
 class PrivateHouse : public Room {
     double yardArea;
 public:
@@ -81,7 +77,6 @@ public:
     }
 };
 
-// Клас для котеджу
 class Cottage : public Room {
     int bathrooms;
     int sleepingPlaces;
@@ -95,7 +90,6 @@ public:
     }
 };
 
-// Клас для готелю
 class Hotel : public Room {
     int numberOfRooms;
     double highestPrice;
@@ -112,7 +106,6 @@ public:
     }
 };
 
-// Клас менеджера для управління приміщеннями
 class Manager {
     vector<shared_ptr<Room>> rooms;
 public:
@@ -129,32 +122,28 @@ public:
 
         string line;
         while (getline(file, line)) {
-            if (line.empty()) continue; // Пропустити пусті рядки
+            if (line.empty()) continue;
 
             stringstream ss(line);
             string type;
             ss >> type;
 
             if (type == "Rooms:") {
-                // Зчитування даних
                 int roomCount;
                 double area;
                 string address;
 
-                ss >> roomCount; // Зчитуємо кількість кімнат
-                ss.ignore(); // Пропускаємо ','
-                ss >> area; // Зчитуємо площу
-                ss.ignore(); // Пропускаємо ','
-                getline(ss, address, '"'); // Зчитуємо адресу
-
-                // Додайте логіку для визначення типу приміщення
-                // Наприклад, для квартири
+                ss >> roomCount;
+                ss.ignore(); 
+                ss >> area; 
+                ss.ignore(); 
+                getline(ss, address, '"');
+                
                 if (type == "Apartment") {
                     int entrance, floor, apartmentNumber;
                     ss >> entrance >> floor >> apartmentNumber;
                     addRoom(make_shared<Apartment>(roomCount, area, address, entrance, floor, apartmentNumber));
-                }
-                // Додайте інші умови для приватного будинку, котеджу, готелю
+                }  
             }
         }
         file.close();
@@ -171,20 +160,15 @@ public:
 int main() {
     Manager manager;
 
-    // Додайте кілька приміщень вручну
     manager.addRoom(make_shared<Apartment>(2, 75, "123 Main St", 1, 3, 45));
     manager.addRoom(make_shared<PrivateHouse>(3, 150, "456 Elm St", 500));
     manager.addRoom(make_shared<Cottage>(4, 200, "789 Oak St", 2, 6));
     manager.addRoom(make_shared<Hotel>(5, 300, "101 Pine St", 20, 500, 100));
 
-    // Вивести всі приміщення
     cout << "Current Rooms:\n";
     manager.displayRooms();
 
-    // Завантажити дані з файлу
     manager.loadFromFile("rooms.txt");
     cout << "\nAfter loading from file:\n";
     manager.displayRooms();
-
-    return 0;
 }
